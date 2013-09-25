@@ -1,0 +1,25 @@
+DESIGN CHOICES
+
+at least 9 different choice points
+- RMI
+- MVC
+- Value object
+- GUI - check boxes to change search mode
+- GUI controller to return TableModels
+- DB - implement interface but create own methods to actually run the program how I think it should
+_ 
+
+-Value judgements 
+- descisions made
+
+
+
+PERCEIVED PROBLEMS:
+- Employing the locking code - hiw to make that work
+- database - haven't manipulated or read binary files to this extent - not us
+- packaging - never user Jar filesed RandomAccessFile
+-didn't know rMi - not sure about creating my own stubs and skeletons
+- time - quite an involved project and not much time given for its completion
+- use name and city as composite primary key because they are unique
+
+uncertainties about the project and decisions made to overcome

@@ -1,0 +1,4 @@
+
+
+Database locations should be entered using Java escape characters(\) in fron tof the slashes
+e.g. "H:\\SJDwork\\MF_SJD\\db-2x2_WORKING.db"
