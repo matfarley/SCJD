@@ -20,17 +20,8 @@ public class NetworkDBLocation extends javax.swing.JDialog {
     private Config properties;
     private String path;
     private int port;
-    private MainWindow view;
-    
-    
-     /** Creates new form DBLocationInput with access to the MainWindow object
-      */
-    public NetworkDBLocation(java.awt.Frame parent, boolean modal, 
-            MainWindow view) {
-        this(parent, modal);
-        this.view = view;   
-    }
-    
+    private Mode mode = Mode.NETWORKED;
+  
     /** Creates new form DBLocationInput */
     public NetworkDBLocation(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -66,7 +57,7 @@ public class NetworkDBLocation extends javax.swing.JDialog {
                 txtPath.setText(properties.getNetworkPath());
             }
             
-            if(properties.getPort() > 0 ){
+            if(properties.getPort() >= 0 ){
                 txtPort.setText(String.valueOf(properties.getPort()));
             }
         }
@@ -76,7 +67,8 @@ public class NetworkDBLocation extends javax.swing.JDialog {
     /**
  *
  * Saves the current database location and port settings from
- * txtPath and txtPort to a Config object.
+ * txtPath and txtPort to a Config object.  Also checks and 
+ * sets the instance variables for this object
 
  */
     void savConfig(){
@@ -246,10 +238,8 @@ private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }
     else{
         savConfig();
-        view.setPath(path);
-        view.setPort(port);
+        new MainWindow(path, port, mode);
         this.dispose();
-
         }
     }//GEN-LAST:event_btnConnectActionPerformed
 
@@ -262,7 +252,8 @@ private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 NetworkDBLocation dialog = new NetworkDBLocation(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
-                        //savConfig(); //How can I get this to work?
+                        //savConfig(); //How can I get this to work? 
+                        //Make method static?
                         System.exit(0);
                     }
                 });

@@ -101,8 +101,7 @@ public class DBEngine {
         int loopOffset = Contractor.FLAG_LENGTH; 
         
         for(int i = 0; i < fieldLength.length; i ++ ){
-            temp = new String(record, loopOffset, fieldLength[i]);
-            temp.trim();
+            temp = new String(record, loopOffset, fieldLength[i]).trim();
             fields.add(temp);
             loopOffset += fieldLength[i];
         }

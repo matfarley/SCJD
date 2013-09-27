@@ -12,27 +12,27 @@ import java.util.Random;
  * @author  90045985
  */
 public class MainWindow extends javax.swing.JFrame {
-
+    private Mode mode;
     private String path;
     private int port;
     private long clientID;
     private ContractorTableModel tableData;
     private ViewController controller;
     
-    /** Creates new form MainWindow */
-    public MainWindow() {
+    public MainWindow(){
         initComponents();
+    }
+    
+    /** Creates new form MainWindow */
+    public MainWindow(String path, int port, Mode mode) {
+        this();
+        setTableColumnSize(); //still needs work!
         genClientID();
-        
-        //get list of Contractors in the Database
-        //controller.getContractors() - returns a table model with all records in database!
-        
-        //code for testing table data
-        tableData = new ContractorTableModel();
-        tableData.addContractorRecord("1", "Fred & Nobby", "Roofing, Carpets", "5", "$95.00", 
-                "99653");
+        this.mode = mode;
+        controller = new ViewController(path, port, mode);
+        tableData = controller.getContractors();
         setUpTable();
-        //end of table testing code
+        setVisible(true);
     }
 
     /** 
@@ -50,6 +50,14 @@ public class MainWindow extends javax.swing.JFrame {
         this.port = port;
     }
     
+    /**
+     * 
+     * @param mode      Mode of operation. NETWORKED or DIRECT
+     */
+    public void setMode(Mode mode){
+        this.mode = mode;
+    }
+    
      /** 
      * Generates a random number to be used as a Client ID when connecting to
      * the server.
@@ -61,11 +69,25 @@ public class MainWindow extends javax.swing.JFrame {
     
     
     /**
+     * Used to help with jTable construction
+     */
+    private void setTableColumnSize(){
+//        this.tblDisplay.getColumnModel().getColumn(1).setPreferredWidth(11);
+//        this.tblDisplay.getColumnModel().getColumn(1).setPreferredWidth(11);
+//        this.tblDisplay.getColumnModel().getColumn(2).setPreferredWidth(11);
+//        this.tblDisplay.getColumnModel().getColumn(3).setPreferredWidth(11);
+//        this.tblDisplay.getColumnModel().getColumn(4).setPreferredWidth(11);
+//        this.tblDisplay.getColumnModel().getColumn(5).setPreferredWidth(11);
+        
+    }
+    
+    /**
      * Adds a table model to the jTable.  Method can be used to refresh the
      * table after the model has been updated
      */
     private void setUpTable(){
         this.tblDisplay.setModel(tableData);
+        setTableColumnSize();
     }
     
     /** This method is called from within the constructor to
@@ -126,6 +148,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         btnBook.setMnemonic('b');
         btnBook.setText("Book Selected");
+        btnBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBookActionPerformed(evt);
+            }
+        });
 
         btnShowAll.setMnemonic('o');
         btnShowAll.setText("Show All Records");
@@ -154,20 +181,20 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 859, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(34, 34, 34)
                                 .addComponent(jLabel1))
                             .addComponent(chkLocation))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 683, Short.MAX_VALUE)
                         .addComponent(btnShowAll))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 501, Short.MAX_VALUE)
                         .addComponent(btnBook))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(chkName)
@@ -178,7 +205,7 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(txtSearchName, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 529, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -226,9 +253,14 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnShowAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowAllActionPerformed
-//        tabledata = getContractors();
-//        setUpTable();
+        tableData = controller.getContractors();
+        setUpTable();
     }//GEN-LAST:event_btnShowAllActionPerformed
+
+private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookActionPerformed
+// Make sure id is 8 chars long and is a digit.  when booking you must enter a 
+//number because blank means available    
+}//GEN-LAST:event_btnBookActionPerformed
 
     /**
     * @param args the command line arguments

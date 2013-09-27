@@ -15,7 +15,7 @@ import db.*;
  * @author matthewfarley
  */
 public class ContractorTableModel extends AbstractTableModel {
-    private String[] headerNames = new String[]{"Record No.", "Name", "City", 
+    private String[] headerNames = new String[]{"Record No.", "Name", "City","Specialty",  
         "No. Staff", "Cost Per Hour", "Booking Customer no."};
     private ArrayList<String[]> contractorRecords = new ArrayList<String[]>();
     
@@ -58,7 +58,7 @@ public class ContractorTableModel extends AbstractTableModel {
      * @param row The row index.
      * @param column The column index.
      */
-    public void setValueAt(Object obj, int row, int column) {
+    @Override public void setValueAt(Object obj, int row, int column) {
         Object[] rowValues = this.contractorRecords.get(row);
         rowValues[column] = obj;
     }
@@ -70,7 +70,7 @@ public class ContractorTableModel extends AbstractTableModel {
      * @param column The specified column index.
      * @return A String containing the column name.
      */
-    public String getColumnName(int column) {
+    @Override public String getColumnName(int column) {
         return headerNames[column];
     }
 
@@ -81,15 +81,17 @@ public class ContractorTableModel extends AbstractTableModel {
     * @param recordNo      Record no.  
     * @param name          Name of contractor.
     * @param city          City of operation
+    * @param specialty     Contractors specialty
     * @param staffNo       Number of staff
     * @param costPerHour   ...
     * @param customer      id number of the booking customer
     */
     public void addContractorRecord(String recordNo, String name, 
-            String city, String staffNo, String costPerHour, String customer){
+            String city, String specialty, String staffNo, String costPerHour, 
+            String customer){
         
-        String[] temp = new String[]{recordNo, name, city, staffNo, costPerHour,
-            customer};
+        String[] temp = new String[]{recordNo, name, city, specialty, staffNo, 
+        costPerHour, customer};
         this.contractorRecords.add(temp);
         }
   
@@ -101,7 +103,8 @@ public class ContractorTableModel extends AbstractTableModel {
     */
     public void addContractorRecord(Contractor contractor){
         addContractorRecord(contractor.getRecordNo(), contractor.getName(), 
-                contractor.getCity(), contractor.getStaffNo(), 
-                contractor.getCostPerHour(), contractor.getCustomer());
+                contractor.getCity(), contractor.getSpecialty(), 
+                contractor.getStaffNo(), contractor.getCostPerHour(), 
+                contractor.getCustomer());
     }   
 }

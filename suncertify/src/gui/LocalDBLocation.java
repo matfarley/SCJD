@@ -22,15 +22,8 @@ private static final String PROPERTIES_FILE_NAME = "suncertify.properties";
     private File file;
     private Config properties;
     private String path;
-    private MainWindow view;
-    
-     /** Creates new form DBLocationInput with access to the MainWindow 
-      * object */
-    public LocalDBLocation(java.awt.Frame parent, boolean modal, 
-            MainWindow view) {
-        this(parent, modal);
-        this.view = view;   
-    }
+    private Mode mode = Mode.DIRECT;
+
     
     /** Creates new form DBLocationInput */
     public LocalDBLocation(java.awt.Frame parent, boolean modal) {
@@ -40,10 +33,10 @@ private static final String PROPERTIES_FILE_NAME = "suncertify.properties";
     }
 
     /**
- *
- * Looks for a Config file in the local directory.  If one is found the 
- * path will be loaded into the txtbox.
- */
+     *
+     * Looks for a Config file in the local directory.  If one is found the 
+     * path will be loaded into the txtbox.
+     */
     void loadConfig(){
         file = new File(PROPERTIES_FILE_NAME);
         if(file.exists()){     
@@ -70,9 +63,9 @@ private static final String PROPERTIES_FILE_NAME = "suncertify.properties";
     }
     
     /**
- *
- * Saves the current database location settings from
- * txtPath to a Config object.
+     *
+     * Saves the current database location settings from
+     * txtPath to a Config object. Also checks and sets the path instance variable
 
  */
     void savConfig(){
@@ -120,7 +113,7 @@ private static final String PROPERTIES_FILE_NAME = "suncertify.properties";
         lblPath = new javax.swing.JLabel();
         lblMessage = new javax.swing.JLabel();
         txtPath = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnConnect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Database Path");
@@ -138,11 +131,11 @@ private static final String PROPERTIES_FILE_NAME = "suncertify.properties";
         lblMessage.setText("Please enter the location of your local database.");
         lblMessage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton1.setMnemonic('C');
-        jButton1.setText("Connect");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnConnect.setMnemonic('C');
+        btnConnect.setText("Connect");
+        btnConnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnConnectActionPerformed(evt);
             }
         });
 
@@ -154,7 +147,7 @@ private static final String PROPERTIES_FILE_NAME = "suncertify.properties";
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton1)
+                        .addComponent(btnConnect)
                         .addGap(18, 18, 18)
                         .addComponent(btnExit))
                     .addGroup(layout.createSequentialGroup()
@@ -175,7 +168,7 @@ private static final String PROPERTIES_FILE_NAME = "suncertify.properties";
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit)
-                    .addComponent(jButton1))
+                    .addComponent(btnConnect))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(lblMessage))
         );
@@ -188,17 +181,17 @@ private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     System.exit(0);
 }//GEN-LAST:event_btnExitActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
     if(new File(txtPath.getText()).exists()){
         savConfig();
-        view.setPath(path);
+        new MainWindow(path, 0, mode);
         this.dispose();
     }
     else{
         txtPath.setText("");
         lblMessage.setText("The File you entered does not exist.  Please enter the location of your database.");
     }
-    }//GEN-LAST:event_jButton1ActionPerformed
+}//GEN-LAST:event_btnConnectActionPerformed
 
     /**
     * @param args the command line arguments
@@ -219,8 +212,8 @@ private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConnect;
     private javax.swing.JButton btnExit;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel lblMessage;
     private javax.swing.JLabel lblPath;
     private javax.swing.JTextField txtPath;

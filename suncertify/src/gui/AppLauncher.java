@@ -26,25 +26,25 @@ public class AppLauncher {
      * in networked mode.
      */
     public static void main(String[] args) {
-        MainWindow view = new MainWindow();
+
         
         
-//        LocalDBLocation inputWindow = 
-//                new LocalDBLocation(new javax.swing.JFrame(), true, view);
+        LocalDBLocation inputWindow = 
+                new LocalDBLocation(new javax.swing.JFrame(), true);
         
 //        NetworkDBLocation nw = new NetworkDBLocation(new javax.swing.JFrame(),
-//                true, view);
-//        
-//        view.setVisible(true);
-//        
-////        inputWindow.setVisible(true);
-//        
+//                true);
+////        
+
+        
+        inputWindow.setVisible(true);
+////        
 //        nw.setVisible(true);
 
         
         
-        ServerWindow sw = new ServerWindow(new javax.swing.JFrame(), true);       
-        sw.setVisible(true);
+//        ServerWindow sw = new ServerWindow(new javax.swing.JFrame(), true);       
+//        sw.setVisible(true);
       
     }
 

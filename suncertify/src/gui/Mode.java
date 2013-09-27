@@ -6,9 +6,11 @@
 package gui;
 
 /**
- *
+ *  Enumerator flag used to pass information regarding the mode of operation 
+ *  down the call stack.
+ * 
  * @author 90045985
  */
 public enum Mode {
-    SERVER, ALONE
+    DIRECT, NETWORKED
 }
