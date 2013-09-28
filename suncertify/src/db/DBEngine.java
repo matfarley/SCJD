@@ -75,7 +75,8 @@ public class DBEngine {
     
     
     /**
-     * Writes a customer number to the correct position in the database file
+     * Checks to see if a record is valid and then writes a customer number to
+     * the correct position in the database file.
      * 
      * @param key
      * @param customer
@@ -84,10 +85,19 @@ public class DBEngine {
     public void bookContractor(List<String> key, String customer)
             throws RecordNotFoundException{
         long offset = getLocation(key);
+        //Use offset to read the file - get the record and then check the flag
+        //if the file is deleted throw a RecordNotFoundException.
+        
+        //Contractor recordToCheck = convertRecord(readRecord(offset));
+        //check flag!
+        
+        //else...
         offset += (Contractor.RECORD_LENGTH - Contractor.CUSTOMER_LENGTH);
         write(offset, customer);
 
     }
+    
+    
     // public Contractor getSingleRecord()
 //    
 //}
@@ -183,7 +193,7 @@ public class DBEngine {
         
         String temp = null;
         
-        //skips the 2 byte flag in the byte[]
+        //skips the 2 byte flag in the byte[] until I figure out how to compare
         int loopOffset = Contractor.FLAG_LENGTH; 
         
         for(int i = 0; i < fieldLength.length; i ++ ){
@@ -191,6 +201,7 @@ public class DBEngine {
             fields.add(temp);
             loopOffset += fieldLength[i];
         }
+        //can re-write the constructor to take a boolean for the flag!
         return new Contractor(fields);
     }
     
@@ -212,9 +223,13 @@ public class DBEngine {
         for(int i = Contractor.OFFSET_LENGTH; i < (int)dbLength; 
                 i += Contractor.RECORD_LENGTH){
             temp = convertRecord(readRecord(i));
-            //adds new object to the Map of locations in the db file
+            
+            //Must check Flag at this point!
+            
+            //adds contractor primary key to the Map of locations in the db file
             recordLocations.put(Collections.unmodifiableList(
                     Arrays.asList(temp.getName(), temp.getCity())),new Long(i));
+            //Adds contractor object to the List of valid contractors
             contractors.add(temp);
         }
         return contractors;

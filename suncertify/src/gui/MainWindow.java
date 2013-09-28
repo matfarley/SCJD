@@ -7,6 +7,7 @@
 package gui;
 
 import java.util.Random;
+import db.*;
 /**
  *
  * @author  90045985
@@ -317,16 +318,12 @@ private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         dlgBookContractor.setSize(450, 125);
         dlgBookContractor.setVisible(true);
 
-
-    
-
-// After writing to database, update table view  
-//    tableData = controller.getContractors();
-//    setUpTable();
     }
     else{
         //joptionPane - please select a row
-        dlgWarning.showMessageDialog(this, "Please select a Contractor from the table","No Record Selected",javax.swing.JOptionPane.ERROR_MESSAGE);
+        dlgWarning.showMessageDialog(this, 
+                "Please select a Contractor from the table",
+                "No Record Selected",javax.swing.JOptionPane.ERROR_MESSAGE);
     }
         
 }//GEN-LAST:event_btnBookActionPerformed
@@ -360,41 +357,49 @@ private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     //when booking you must enter a number because blank means available
 
         if(txtCustomerNo.getText().equals("")){
-            
-            //will need to pass in a string of 8 spaces i.e. "        "
-            //get details from table
-            //pass into contractor.bookRecord()
-                
-    //pulls the rest of the records details from the table and calls 
-    //controller.bookContractor() to do the writing. or does it only pull the
-            //fields needed for a match on the primary key?
-    
-    //closes jDialog.
-            
-            System.out.println("booking record");
+            //tblDisplay.getValueAt(tblDisplay.getSelectedRow(), 1);
+            try{
+                controller.bookContractor(
+                    tblDisplay.getValueAt(tblDisplay.getSelectedRow(), 0).toString(), 
+                    tblDisplay.getValueAt(tblDisplay.getSelectedRow(), 1).toString(), 
+                    "        ");
+            }catch(RecordNotFoundException rnfe){
+                dlgWarning.showMessageDialog(this, 
+                        rnfe.getMessage(),
+                        "Record Not FOund",javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+            tableData = controller.getContractors();
+            setUpTable();
             dlgBookContractor.dispose();
         }
         else if(txtCustomerNo.getText().length() == 8){
             try{
                 //use parseInt() to check that the text is a number.
                 int tempCustNo = Integer.parseInt(txtCustomerNo.getText());
-                System.out.println("booking record");
-                // call the method passing in the temp no.             
-                //get details from table
-            //pass into contractor.bookRecord()
-            dlgBookContractor.dispose();
-                
+                controller.bookContractor(
+                            tblDisplay.getValueAt(tblDisplay.getSelectedRow(), 0).toString(), 
+                            tblDisplay.getValueAt(tblDisplay.getSelectedRow(), 1).toString(), 
+                            String.valueOf(tempCustNo));
+            
             }catch(NumberFormatException nfe){
                 txtCustomerNo.setText("");
-                lblCustNoMessage.setText("Please enter a valid customer no.");
+                lblCustNoMessage.setText("Please enter a valid 8 digit "
+                        + "customer no.");
+            }catch(RecordNotFoundException rnfe){
+                dlgWarning.showMessageDialog(this, 
+                        rnfe.getMessage(),
+                        "Record Not FOund",javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-        }
+            tableData = controller.getContractors();
+            setUpTable();
+            dlgBookContractor.dispose();
+            }
+        
         else{
             txtCustomerNo.setText("");
-            lblCustNoMessage.setText("Please enter a valid customer no.");
+            lblCustNoMessage.setText("Please enter a valid 8 digit"
+                    + " customer no.");
         }
-        
-        
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     /**

@@ -72,12 +72,19 @@ public class ViewController {
     }
     
     
-    //packages strings into a list and sends it to database
+    /**
+     * packages user input from the view into a list and sends it to the 
+     * database.  Takes a contractor name and city to be used as a compound
+     * primary key in the database.
+     * 
+     * @param name          Name of contractor
+     * @param city          City of operation
+     * @param customerNo    id number for booking customer or "        " to 
+     * cancel a booking
+     * @throws RecordNotFoundException 
+     */
     public void bookContractor(String name, String city, String customerNo)
             throws RecordNotFoundException{
-        //call next method((Arrays.asList(name, city), customerNo);
-        
+        db.bookContractor(Arrays.asList(name, city), customerNo);
     }
-    // createContractor();
-    //calls database's book contractor method
 }

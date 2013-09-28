@@ -38,6 +38,22 @@ public class Database {
     public List<Contractor> getAllRecords(){
        return db.getAllRecords();
     }
+
+    
+    /**
+     * Calls the DBEngine method <code>bookContractor()</code> passing in the
+     * values the user has passed into the view.
+     * 
+     * @param key       Values for compound primary key
+     * @param customer  number of booking customer or "        " to clear an
+     * existing booking
+     * @throws RecordNotFoundException 
+     */
+    public void bookContractor(List<String> key, String customer)
+            throws RecordNotFoundException{
+        db.bookContractor(key, customer);
+        
+    }
     
     //bookContractor
     
