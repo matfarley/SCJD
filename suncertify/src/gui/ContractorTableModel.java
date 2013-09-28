@@ -15,7 +15,7 @@ import db.*;
  * @author matthewfarley
  */
 public class ContractorTableModel extends AbstractTableModel {
-    private String[] headerNames = new String[]{"Record No.", "Name", "City","Specialty",  
+    private String[] headerNames = new String[]{"Name", "City","Specialty",  
         "No. Staff", "Cost Per Hour", "Booking Customer no."};
     private ArrayList<String[]> contractorRecords = new ArrayList<String[]>();
     
@@ -78,7 +78,6 @@ public class ContractorTableModel extends AbstractTableModel {
     * CAdds a contractor object to the table.
     * 
     * @param isValid       Flag, is the record valid, if not it is deleted
-    * @param recordNo      Record no.  
     * @param name          Name of contractor.
     * @param city          City of operation
     * @param specialty     Contractors specialty
@@ -86,11 +85,11 @@ public class ContractorTableModel extends AbstractTableModel {
     * @param costPerHour   ...
     * @param customer      id number of the booking customer
     */
-    public void addContractorRecord(String recordNo, String name, 
+    public void addContractorRecord(String name, 
             String city, String specialty, String staffNo, String costPerHour, 
             String customer){
         
-        String[] temp = new String[]{recordNo, name, city, specialty, staffNo, 
+        String[] temp = new String[]{name, city, specialty, staffNo, 
         costPerHour, customer};
         this.contractorRecords.add(temp);
         }
@@ -102,9 +101,8 @@ public class ContractorTableModel extends AbstractTableModel {
     * @param contractor        A Contractor value object.
     */
     public void addContractorRecord(Contractor contractor){
-        addContractorRecord(contractor.getRecordNo(), contractor.getName(), 
-                contractor.getCity(), contractor.getSpecialty(), 
-                contractor.getStaffNo(), contractor.getCostPerHour(), 
-                contractor.getCustomer());
+        addContractorRecord(contractor.getName(), contractor.getCity(), 
+                contractor.getSpecialty(), contractor.getStaffNo(), 
+                contractor.getCostPerHour(), contractor.getCustomer());
     }   
 }

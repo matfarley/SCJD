@@ -65,4 +65,19 @@ public class ViewController {
         }
         return tableModel;
     }
+    
+    //accepts info from the view and turns it into a contractor object
+    public Contractor createContractor(){
+        return null;
+    }
+    
+    
+    //packages strings into a list and sends it to database
+    public void bookContractor(String name, String city, String customerNo)
+            throws RecordNotFoundException{
+        //call next method((Arrays.asList(name, city), customerNo);
+        
+    }
+    // createContractor();
+    //calls database's book contractor method
 }

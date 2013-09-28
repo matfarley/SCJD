@@ -30,7 +30,7 @@ public class Contractor {
             SPECIALTIES_LENGTH + STAFF_LENGTH + RATE_LENGTH +  CUSTOMER_LENGTH ;
     
     private boolean isValid;
-    private String recordNo;
+    private String[] identifier; //used to find record position in file
     private String name;
     private String city;
     private String specialty;
@@ -43,8 +43,7 @@ public class Contractor {
     /**
      * Creates a new Contractor instance
      * 
-     * @param isValid       Flag, is the record valid, if not it is deleted
-     * @param recordNo      Record no.  
+     * @param isValid       Flag, is the record valid, if not it is deleted 
      * @param name          Name of contractor.
      * @param city          City of operation
      * @param specialty     Contractors specialty
@@ -55,12 +54,12 @@ public class Contractor {
     public Contractor(String name, String city, String specialty, 
             String staffNo, String costPerHour, String customer){
         super();
-//    public Contractor(boolean isValid, String recordNo, String name, 
+//    public Contractor(boolean isValid, String name, 
 //            String city, String specialty, String staffNo, String costPerHour,
 //            String customer)
         //Ignoring the flag values until I figure out how to evaluate the bytes
         //this.isValid = isValid;
-        //this.recordNo = recordNo;
+        this.identifier = new String[]{name, city};
         this.name = name;
         this.city = city;
         this.specialty = specialty;
@@ -90,10 +89,10 @@ public class Contractor {
     
     /**
      * 
-     * @return recordNo    The Contractors record no. in the database.
+     * @return identifier    The Contractors unique identifier
      */
-    public String getRecordNo(){
-        return recordNo;
+    public String[] getIdentifier(){
+        return identifier;
     }
     
      /**
@@ -155,10 +154,10 @@ public class Contractor {
     
     /**
      * 
-     * @param recordNo    The Contractors record no. in the database.
+     * @param identifier    The Contractors unique identifier
      */
-    public void setRecordNo(String recordNo){
-        this.recordNo = recordNo;
+    public void setIdentifier(String name, String city){
+        this.identifier = new String[]{name, city};
     }
     
      /**

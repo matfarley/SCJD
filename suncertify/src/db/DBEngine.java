@@ -21,11 +21,12 @@ public class DBEngine {
             new StringBuilder(Contractor.RECORD_LENGTH);
     private File file;
     private RandomAccessFile dbFile;
-    private int dbLength;
+    private long dbLength;
     //List containing all database records as Contractor objects
     private List<Contractor> dbRecords;
     //Map used to store a record of the starting point of each record.
-    private Map<String, Long> recordNumbers; //is there a record no or a compound primary key?
+    private Map<List<String>, Long> recordLocations = 
+            new HashMap<List<String>, Long>(); 
     
     
     /** Creates new DBEngine 
@@ -37,7 +38,7 @@ public class DBEngine {
         try{
             file = new File(path);
             dbFile = new RandomAccessFile(file, "rw");
-            dbLength = (int)dbFile.length();
+            dbLength = dbFile.length();
             dbRecords = getAllRecords();
             
         }catch(IOException ioe){
@@ -45,9 +46,55 @@ public class DBEngine {
         }//figure out how to handle exceptions later.  Throw Database Exception?
     }
     
+   
+    //addNewRecord(){
+    //  needs to add an identifier and location to Map
+    //  location will be the current length of the file before writing.
+    //  dbLength will need to be updated
+    //}
     
-    //public xxx buildRecordNumbers();
-    //addToRecordNumbers()
+    //deleteRecord(){}
+        //writes a flag
+
+    /**
+     * Finds a single record in a Collection of records
+     * 
+     * @param key   Key representing record in Map of file locations
+     * @return      long representing location of record in database
+     * @throws RecordNotFoundException 
+     */
+    public long getLocation(List<String> key) throws RecordNotFoundException{
+        if(recordLocations.containsKey(key)){
+            return recordLocations.get(key);
+        }
+        else{
+            throw new RecordNotFoundException(
+                    "Records composite key of Name + City not found in database");
+        }
+    }
+    
+    
+    /**
+     * Writes a customer number to the correct position in the database file
+     * 
+     * @param key
+     * @param customer
+     * @throws RecordNotFoundException 
+     */
+    public void bookContractor(List<String> key, String customer)
+            throws RecordNotFoundException{
+        long offset = getLocation(key);
+        offset += (Contractor.RECORD_LENGTH - Contractor.CUSTOMER_LENGTH);
+        write(offset, customer);
+
+    }
+    // public Contractor getSingleRecord()
+//    
+//}
+    // 
+    
+    
+    
     
     /**
      * Most basic level of reading the database file.  Reads a single record at
@@ -56,7 +103,7 @@ public class DBEngine {
      * @param offset      The starting point of the record
      * @return byte[]     A single record in a byte[]
      */
-    public byte[] readRecord(int offset){
+    public byte[] readRecord(long offset){
         
         //use if statement to check if records are null.  If so then use
         
@@ -76,6 +123,45 @@ public class DBEngine {
         }
        
         return temp;
+    }
+    
+    /**
+     * Basic method that writes to the database.  can accept a whole record or 
+     * an individual field i.e customer no.
+     * 
+     * @param location      Location in file as a long
+     * @param data        String representation of a record or field.
+     */
+    
+    public void write(long location, String data){
+        try{
+            synchronized(dbFile){
+                dbFile.seek(location);
+                dbFile.write(data.getBytes());
+            }
+        }catch(IOException ioe){
+             System.out.println("Exception while writing records\n" +
+                    " to database file\n" + ioe);
+        }
+    } 
+    
+    /**
+     * Changes the flag for a record indicating that it is either deleted or 
+     * valid.
+     * 
+     * @param location          Location in file
+     * @param flag              2 byte flag valid or deleted.
+     */
+    public void writeFlag(long location, byte[] flag){
+        try{
+            synchronized(dbFile){
+                dbFile.seek(location);
+                dbFile.write(flag);
+            }
+        }catch(IOException ioe){
+                System.out.println("Exception while writing flag\n" +
+                    " to database file\n" + ioe);
+        }
     }
     
     /**
@@ -112,7 +198,9 @@ public class DBEngine {
     /**
      * Runs <code>readRecord()</code> in a loop, passing it in to 
      * <code>convertRecord</code> as an argument, taking 
-     * the result and putting it into an <code>ArrayList</code.
+     * the result and putting it into an <code>ArrayList</code>.
+     * The resulting Contractor is then recorded in a Map using the name and
+     * city fields as a key to find the location.
      * 
      * @return List<Contractor>     Each record of the database as a Contractor 
      * object, stored in an ArrayList.
@@ -121,10 +209,12 @@ public class DBEngine {
         List<Contractor> contractors = new ArrayList<Contractor>();
         Contractor temp = null;
         
-        for(int i = Contractor.OFFSET_LENGTH; i < dbLength; 
+        for(int i = Contractor.OFFSET_LENGTH; i < (int)dbLength; 
                 i += Contractor.RECORD_LENGTH){
             temp = convertRecord(readRecord(i));
-             //calls addToRecordNumbers() when creating, adding location to Map.
+            //adds new object to the Map of locations in the db file
+            recordLocations.put(Collections.unmodifiableList(
+                    Arrays.asList(temp.getName(), temp.getCity())),new Long(i));
             contractors.add(temp);
         }
         return contractors;

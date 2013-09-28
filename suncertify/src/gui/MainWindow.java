@@ -26,7 +26,7 @@ public class MainWindow extends javax.swing.JFrame {
     /** Creates new form MainWindow */
     public MainWindow(String path, int port, Mode mode) {
         this();
-        setTableColumnSize(); //still needs work!
+        this.toFront();
         genClientID();
         this.mode = mode;
         controller = new ViewController(path, port, mode);
@@ -87,7 +87,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void setUpTable(){
         this.tblDisplay.setModel(tableData);
-        setTableColumnSize();
+        setTableColumnSize(); //Method not finished!!!!!
     }
     
     /** This method is called from within the constructor to
@@ -99,6 +99,12 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        dlgWarning = new javax.swing.JOptionPane();
+        dlgBookContractor = new javax.swing.JDialog();
+        jLabel3 = new javax.swing.JLabel();
+        txtCustomerNo = new javax.swing.JTextField();
+        lblCustNoMessage = new javax.swing.JLabel();
+        btnSubmit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDisplay = new javax.swing.JTable();
         txtSearchName = new javax.swing.JTextField();
@@ -112,6 +118,45 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtSearchLocation = new javax.swing.JTextField();
         btnDelete = new javax.swing.JButton();
+
+        jLabel3.setText("Customer No.");
+
+        lblCustNoMessage.setText("Enter an 8 digit customer number, or leave blank to clear booking");
+        lblCustNoMessage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btnSubmit.setMnemonic('S');
+        btnSubmit.setText("Submit");
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubmitActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout dlgBookContractorLayout = new javax.swing.GroupLayout(dlgBookContractor.getContentPane());
+        dlgBookContractor.getContentPane().setLayout(dlgBookContractorLayout);
+        dlgBookContractorLayout.setHorizontalGroup(
+            dlgBookContractorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dlgBookContractorLayout.createSequentialGroup()
+                .addGap(65, 65, 65)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCustomerNo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(btnSubmit)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(lblCustNoMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+        );
+        dlgBookContractorLayout.setVerticalGroup(
+            dlgBookContractorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dlgBookContractorLayout.createSequentialGroup()
+                .addGap(0, 48, Short.MAX_VALUE)
+                .addGroup(dlgBookContractorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtCustomerNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSubmit))
+                .addGap(27, 27, 27)
+                .addComponent(lblCustNoMessage))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("All About Improvement Ltd.");
@@ -145,6 +190,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         btnAdd.setMnemonic('A');
         btnAdd.setText("Add Record");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnBook.setMnemonic('b');
         btnBook.setText("Book Selected");
@@ -249,7 +299,9 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchNameActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
+// After writing to database, update table view  
+//    tableData = controller.getContractors();
+//    setUpTable();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnShowAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowAllActionPerformed
@@ -258,9 +310,92 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnShowAllActionPerformed
 
 private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookActionPerformed
-// Make sure id is 8 chars long and is a digit.  when booking you must enter a 
-//number because blank means available    
+
+    //Check if a record is selected!
+    if(tblDisplay.getSelectedRow() != -1){
+        
+        dlgBookContractor.setSize(450, 125);
+        dlgBookContractor.setVisible(true);
+
+
+    
+
+// After writing to database, update table view  
+//    tableData = controller.getContractors();
+//    setUpTable();
+    }
+    else{
+        //joptionPane - please select a row
+        dlgWarning.showMessageDialog(this, "Please select a Contractor from the table","No Record Selected",javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+        
 }//GEN-LAST:event_btnBookActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+//opens a dialog to accept the new record details
+       //checks length of fields - no booking is taken when creating so only
+       //name fields etc no customer at this point
+        
+       // calls controller.newContractor
+        //window stays open until method runs and primary key is checked.
+        //checks primary key.
+        //if record exists the flag is checked - must read the record from the
+        //file to check! - if is valid then an exception will be sent back.
+        // if file is deleted then only the flag is changed.
+        
+        //if duplicate primary key, - this opens a
+        // dialog to acknowledge and you must fix the details before submitting
+        //again
+        
+        
+        
+        // After writing to database, update table view  
+//    tableData = controller.getContractors();
+//    setUpTable();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        
+    // Make sure id is 8 chars long and is a digit or blank.  
+    //when booking you must enter a number because blank means available
+
+        if(txtCustomerNo.getText().equals("")){
+            
+            //will need to pass in a string of 8 spaces i.e. "        "
+            //get details from table
+            //pass into contractor.bookRecord()
+                
+    //pulls the rest of the records details from the table and calls 
+    //controller.bookContractor() to do the writing. or does it only pull the
+            //fields needed for a match on the primary key?
+    
+    //closes jDialog.
+            
+            System.out.println("booking record");
+            dlgBookContractor.dispose();
+        }
+        else if(txtCustomerNo.getText().length() == 8){
+            try{
+                //use parseInt() to check that the text is a number.
+                int tempCustNo = Integer.parseInt(txtCustomerNo.getText());
+                System.out.println("booking record");
+                // call the method passing in the temp no.             
+                //get details from table
+            //pass into contractor.bookRecord()
+            dlgBookContractor.dispose();
+                
+            }catch(NumberFormatException nfe){
+                txtCustomerNo.setText("");
+                lblCustNoMessage.setText("Please enter a valid customer no.");
+            }
+        }
+        else{
+            txtCustomerNo.setText("");
+            lblCustNoMessage.setText("Please enter a valid customer no.");
+        }
+        
+        
+    }//GEN-LAST:event_btnSubmitActionPerformed
 
     /**
     * @param args the command line arguments
@@ -279,12 +414,18 @@ private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnShowAll;
+    private javax.swing.JButton btnSubmit;
     private javax.swing.JCheckBox chkLocation;
     private javax.swing.JCheckBox chkName;
+    private javax.swing.JDialog dlgBookContractor;
+    private javax.swing.JOptionPane dlgWarning;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCustNoMessage;
     private javax.swing.JTable tblDisplay;
+    private javax.swing.JTextField txtCustomerNo;
     private javax.swing.JTextField txtSearchLocation;
     private javax.swing.JTextField txtSearchName;
     // End of variables declaration//GEN-END:variables

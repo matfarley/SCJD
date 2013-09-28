@@ -38,6 +38,9 @@ public class Database {
     public List<Contractor> getAllRecords(){
        return db.getAllRecords();
     }
+    
+    //bookContractor
+    
 }
 
 
