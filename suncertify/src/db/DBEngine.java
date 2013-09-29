@@ -16,6 +16,9 @@ import java.util.*;
  * @author matthewfarley
  */
 public class DBEngine {
+    private static short DELETE_FLAG = (short)0x8000;
+    private static short VALID_FLAG = (short)00;
+    
     private String path;
     private StringBuilder blankRecord = 
             new StringBuilder(Contractor.RECORD_LENGTH);
@@ -53,8 +56,8 @@ public class DBEngine {
     //  dbLength will need to be updated
     //}
     
-    //deleteRecord(){}
-        //writes a flag
+    
+
 
     /**
      * Finds a single record in a Collection of records
@@ -85,6 +88,9 @@ public class DBEngine {
     public void bookContractor(List<String> key, String customer)
             throws RecordNotFoundException{
         long offset = getLocation(key);
+        //Deleted files are not sent to the view, so shouldnt be selectable, 
+        // but are checked just in case.
+        
         //Use offset to read the file - get the record and then check the flag
         //if the file is deleted throw a RecordNotFoundException.
         
@@ -142,7 +148,6 @@ public class DBEngine {
      * @param location      Location in file as a long
      * @param data        String representation of a record or field.
      */
-    
     public void write(long location, String data){
         try{
             synchronized(dbFile){
@@ -154,6 +159,8 @@ public class DBEngine {
                     " to database file\n" + ioe);
         }
     } 
+    
+
     
     /**
      * Changes the flag for a record indicating that it is either deleted or 
@@ -174,6 +181,22 @@ public class DBEngine {
         }
     }
     
+    
+        //working! - will replace write flag?
+    public void delete(long location){
+        try{
+            synchronized(dbFile){
+                dbFile.seek(location);
+                dbFile.writeShort(DELETE_FLAG);
+                //dbFile.writeShort(VALID_FLAG);
+            }
+        }catch(IOException ioe){
+             System.out.println("Exception while deleting records\n" +
+                    " to database file\n" + ioe);
+        }
+    } 
+    
+    
     /**
      * Converts a <code>byte[]</code> "record" into a populated Contractor 
      * object.
@@ -190,19 +213,21 @@ public class DBEngine {
             Contractor.CUSTOMER_LENGTH};
         
         List<String> fields = new ArrayList<String>();
-        
+        int flag = 0;
         String temp = null;
         
-        //skips the 2 byte flag in the byte[] until I figure out how to compare
+        //skips the 2 byte flag in the byte[] as this converted to an int
         int loopOffset = Contractor.FLAG_LENGTH; 
         
         for(int i = 0; i < fieldLength.length; i ++ ){
+            //Takes 2 items from the byte[] and makes a 2 byte int.
+            flag = ((int)record[0] << 8) + (record[1] & 0xff);
             temp = new String(record, loopOffset, fieldLength[i]).trim();
             fields.add(temp);
             loopOffset += fieldLength[i];
         }
         //can re-write the constructor to take a boolean for the flag!
-        return new Contractor(fields);
+        return new Contractor(flag, fields);
     }
     
     
@@ -224,11 +249,16 @@ public class DBEngine {
                 i += Contractor.RECORD_LENGTH){
             temp = convertRecord(readRecord(i));
             
-            //Must check Flag at this point!
+
             
             //adds contractor primary key to the Map of locations in the db file
             recordLocations.put(Collections.unmodifiableList(
                     Arrays.asList(temp.getName(), temp.getCity())),new Long(i));
+            
+            //Must check Flag at this point!
+            // All records are added to the map but only records that are vaild
+            // are sent to the view!
+            
             //Adds contractor object to the List of valid contractors
             contractors.add(temp);
         }

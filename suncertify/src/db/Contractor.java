@@ -15,18 +15,18 @@ import java.util.List;
  */
 public class Contractor {
     // Variables contain values for the length of each field in bytes.    
-    static final int OFFSET_LENGTH = 70;
+    public static final int OFFSET_LENGTH = 70;
     //constant values for the valid and deleted flags
-    //static final byte FLAG_VALID = 00;
-    //static final byte FLAG_DELETED = (byte)0x8000;
-    static final int FLAG_LENGTH = 2;
-    static final int NAME_LENGTH = 32;
-    static final int CITY_LENGTH = 64;
-    static final int SPECIALTIES_LENGTH = 64;
-    static final int STAFF_LENGTH = 6;
-    static final int RATE_LENGTH = 8;
-    static final int CUSTOMER_LENGTH = 8;
-    static final int RECORD_LENGTH = FLAG_LENGTH + NAME_LENGTH + CITY_LENGTH + 
+    private static final int DELETED_FLAG = 0x8000;
+    private static final int VALID_FLAG = 00;
+    public static final int FLAG_LENGTH = 2;
+    public static final int NAME_LENGTH = 32;
+    public static final int CITY_LENGTH = 64;
+    public static final int SPECIALTIES_LENGTH = 64;
+    public static final int STAFF_LENGTH = 6;
+    public static final int RATE_LENGTH = 8;
+    public static final int CUSTOMER_LENGTH = 8;
+    public static final int RECORD_LENGTH = FLAG_LENGTH + NAME_LENGTH + CITY_LENGTH + 
             SPECIALTIES_LENGTH + STAFF_LENGTH + RATE_LENGTH +  CUSTOMER_LENGTH ;
     
     private boolean isValid;
@@ -43,7 +43,7 @@ public class Contractor {
     /**
      * Creates a new Contractor instance
      * 
-     * @param isValid       Flag, is the record valid, if not it is deleted 
+     * @param flag          Flag, is the record valid, if not it is deleted 
      * @param name          Name of contractor.
      * @param city          City of operation
      * @param specialty     Contractors specialty
@@ -51,14 +51,18 @@ public class Contractor {
      * @param costPerHour   ...
      * @param customer      id number of the booking customer
      */
-    public Contractor(String name, String city, String specialty, 
+    public Contractor(int flag, String name, String city, String specialty, 
             String staffNo, String costPerHour, String customer){
         super();
-//    public Contractor(boolean isValid, String name, 
-//            String city, String specialty, String staffNo, String costPerHour,
-//            String customer)
-        //Ignoring the flag values until I figure out how to evaluate the bytes
-        //this.isValid = isValid;
+        
+        //Checking flag
+        if(flag == VALID_FLAG){
+            this.isValid = true;
+        }
+        else if(flag == DELETED_FLAG){ 
+            this.isValid = false;
+        }
+        
         this.identifier = new String[]{name, city};
         this.name = name;
         this.city = city;
@@ -73,8 +77,8 @@ public class Contractor {
      * 
      * @param fields        An arrayList containing field contents as Strings
      */
-    public Contractor(List<String> fields){
-        this(fields.get(0), fields.get(1), fields.get(2), fields.get(3) , 
+    public Contractor(int flag, List<String> fields){
+        this(flag, fields.get(0), fields.get(1), fields.get(2), fields.get(3) , 
                 fields.get(4), fields.get(5) );
     }
     

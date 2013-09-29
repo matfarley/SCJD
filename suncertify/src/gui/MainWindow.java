@@ -9,7 +9,15 @@ package gui;
 import java.util.Random;
 import db.*;
 /**
- *
+ * Provides the Main viewing window and database display for the application.
+ * Most of the programs exceptions are propagated up to this class, which 
+ * handles most of the exceptions by displaying dialog boxes.
+ * 
+ * Various dialog boxes are produced to take user input before invoking methods
+ * on the view controller which packages data sent and data received by the 
+ * MainWindow.
+ * 
+ * 
  * @author  90045985
  */
 public class MainWindow extends javax.swing.JFrame {
@@ -73,13 +81,37 @@ public class MainWindow extends javax.swing.JFrame {
      * Used to help with jTable construction
      */
     private void setTableColumnSize(){
-//        this.tblDisplay.getColumnModel().getColumn(1).setPreferredWidth(11);
-//        this.tblDisplay.getColumnModel().getColumn(1).setPreferredWidth(11);
-//        this.tblDisplay.getColumnModel().getColumn(2).setPreferredWidth(11);
-//        this.tblDisplay.getColumnModel().getColumn(3).setPreferredWidth(11);
-//        this.tblDisplay.getColumnModel().getColumn(4).setPreferredWidth(11);
-//        this.tblDisplay.getColumnModel().getColumn(5).setPreferredWidth(11);
+        javax.swing.table.TableColumn column = null;
+        int tableSize = tblDisplay.getModel().getColumnCount();
         
+        for (int i = 0; i < tableSize; i++) {
+            switch(i){
+                case 0:
+                    column = tblDisplay.getColumnModel().getColumn(i);
+                    column.setPreferredWidth(Contractor.NAME_LENGTH);
+                    break;
+                case 1:
+                    column = tblDisplay.getColumnModel().getColumn(i);
+                    column.setPreferredWidth(Contractor.CITY_LENGTH);
+                    break;
+                case 2:
+                    column = tblDisplay.getColumnModel().getColumn(i);
+                    column.setPreferredWidth(Contractor.SPECIALTIES_LENGTH);
+                    break;
+                case 3:
+                    column = tblDisplay.getColumnModel().getColumn(i);
+                    column.setPreferredWidth(Contractor.STAFF_LENGTH);
+                    break;
+                case 4:
+                    column = tblDisplay.getColumnModel().getColumn(i);
+                    column.setPreferredWidth(Contractor.RATE_LENGTH);
+                    break;
+                case 5:
+                    column = tblDisplay.getColumnModel().getColumn(i);
+                    column.setPreferredWidth(Contractor.CUSTOMER_LENGTH);
+                    break;    
+            }
+        }
     }
     
     /**
@@ -88,7 +120,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void setUpTable(){
         this.tblDisplay.setModel(tableData);
-        setTableColumnSize(); //Method not finished!!!!!
+        setTableColumnSize();
     }
     
     /** This method is called from within the constructor to
@@ -332,13 +364,19 @@ private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 //opens a dialog to accept the new record details
        //checks length of fields - no booking is taken when creating so only
        //name fields etc no customer at this point
+       
+        // When constructung the database all records are added to the Map but
+        // only those that are valid  are sent to the model.
+        
         
        // calls controller.newContractor
         //window stays open until method runs and primary key is checked.
         //checks primary key.
         //if record exists the flag is checked - must read the record from the
         //file to check! - if is valid then an exception will be sent back.
-        // if file is deleted then only the flag is changed.
+        
+        // if file is deleted then the new record is written in place of the old
+        //record and flag is valid.
         
         //if duplicate primary key, - this opens a
         // dialog to acknowledge and you must fix the details before submitting
