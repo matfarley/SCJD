@@ -1,4 +1,104 @@
 
+LOCAL DATABASE MODE --->
 
-Database locations should be entered using Java escape characters(\) in fron tof the slashes
-e.g. "H:\\SJDwork\\MF_SJD\\db-2x2_WORKING.db"
+To launch the application in local database mode, execute the .jar file from the command line and add the parameter
+"alone" i.e: 
+
+java -jar runme.jar alone
+
+When dialog window appears enter the local location into the text box in the standard convention for java
+programs(\\ instead of \) e.g."H:\\SJDwork\\MF_SJD\\db-2x2_WORKING.db".
+
+Selecting [Connect] will attempt to connect to the specified database and launch the applications main window.  
+If a connection fails a message is returned in the text label at the bottom of the dialog box.  This dialog
+box can be exited at any time by clicking [Exit] or using the close button in the top right corner.
+
+
+The Main Window facilitates all of the databases functionality.  By default all of the databases contents are 
+displayed in the main table at start up.  The Main Window can be exited at any time by selecting the exit button
+in the top right of the window.
+
+The Main Window facilitates the follwing database functions:
+
+
+Search:
+- select the check box for the field you wish to search, either Name, Location or both name and location.
+- enter a valid regex expression into the Name or location field and press [Search]
+- results wil be returned in the table below, errors will be shown on screen.
+- press [clear fields] to clear the checks and text box content.  press [Show All Records] to display
+  the databases full contents.
+
+Add Record:
+-click [Add Record]
+- Enter the contractor's details into the text fields.  The system will let you know if you enter invlaid data.
+- No two contractor records can share the same name and location.
+- press [Submit]
+
+Delete Record:
+- select a record from the table and click [Delete Record]
+- You will be prompted by a popup to check whether or not you wish to continue with the deletion. select [Ok].
+
+Book Record:
+-select a record and click [Book Selected].  If no record is selected an error message is shown.
+-enter a customer number of 8 digits into the text box and click [Submit]
+
+
+Clear Booking:
+-select a record and click [Clear Booking].  Note, no warning is given before a booking is cleared.
+<---
+
+
+
+SERVER MODE --->
+To launch the server you must first run the RMIRegistry.  To do this open a seperate command prompt and navigate to
+the projects root folder.  type "rmiregistry" into the command line and press [return]
+
+From a seperate command prompt, execute the .jar file using the parameter "server":
+
+java -jar runme.jar server
+
+
+When dialog window appears enter the location of the servers database into the text box in the standard convention 
+for java programs(\\ instead of \) e.g."H:\\SJDwork\\MF_SJD\\db-2x2_WORKING.db".
+
+Then enter a port number for the server to use.  
+If you wish to test on a local machine use port 0.
+
+Selecting [Start Server] will attempt to connect to the specified database, and register with the RMIRegistry.
+If a connection fails a message is returned in the text label at the bottom of the dialog box.  If the connection
+is successful the [Start Server] button, path and port boxes become disabled.
+
+Leave the server running until you no longer wish to access the database from a client and press [Exit] or using 
+the close button in the top right corner.
+<---
+
+
+
+NETWORK DATABASE MODE --->
+
+In order to run the application in networked mode the Server and RMIRegistry must already be running.
+
+To launch the application in network database mode, execute the .jar file from the command line with no parameters
+
+java -jar runme.jar
+
+
+When dialog window appears enter the URL location of the server you wish to connect to into the Database path
+text box in the standard convention for java programs(\\ instead of \) 
+
+if you wish to connect to a local server on the same machine use:
+
+"rmi://127.0.0.1/"
+
+Enter the port to connect on.  If connecting locally use port 0.
+
+
+Selecting [Connect] will attempt to connect to the specified server and launch the applications main window.  
+If a connection fails a message is returned in the text label at the bottom of the dialog box.  This dialog
+box can be exited at any time by clicking [Exit] or using the close button in the top right corner.
+<---
+
+
+
+
+

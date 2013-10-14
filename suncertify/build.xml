@@ -10,6 +10,14 @@
 <project name="suncertify" default="default" basedir=".">
     <description>Builds, tests, and runs the project suncertify.</description>
     <import file="nbproject/build-impl.xml"/>
+    
+
+    <target name="startRMI" depends="init">
+        <exec executable="rmiregistry" dir="${build.classes.dir}">
+        </exec>
+    </target>
+
+
     <!--
 
     There exist several targets which are by default empty and which can be 

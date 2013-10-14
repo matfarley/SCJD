@@ -7,7 +7,11 @@ at least 9 different choice points
 - GUI - check boxes to change search mode
 - GUI controller to return TableModels
 - DB - implement interface but create own methods to actually run the program how I think it should
-_ 
+_ use a method local inner class to build the string efficiently.  Fixes the problem
+where to put the  offset and newRecord variables and how to initialize 
+- chose to overwrite records in the database marked as deleted if a new record is given with the same primary key - this is so it is only possible for one record with that primary key to ever exist in the database, valid or not.!
+and reset them for each record
+- just  write 1 version of the database class that does locking etc even for the local version.
 
 -Value judgements 
 - descisions made
@@ -21,5 +25,6 @@ PERCEIVED PROBLEMS:
 -didn't know rMi - not sure about creating my own stubs and skeletons
 - time - quite an involved project and not much time given for its completion
 - use name and city as composite primary key because they are unique
+
 
 uncertainties about the project and decisions made to overcome

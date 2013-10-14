@@ -1,0 +1,31 @@
+Starting the application includes running the RMI remote object registry
+
+Mac
+db-2x2_WORKING.db
+
+"Windows Shared Folder"/"Web and Software Development"/Software/SCJD/suncertify/build
+
+H: drive
+
+H:\\SJDwork\\MF_SJD\\db-2x2_WORKING.db
+
+
+
+Network path = "rmi://127.0.0.1/"
+
+
+cDrive
+
+C:\\Documents and Settings\\90045985\\Desktop\\SCJD\\suncertify\\db-2x2_WORKING.db
+
+
+C:\\Documents and Settings\\90045985\\Desktop\\SJDwork\\MF_SJD\\suncertify\\db-2x2_WORKING.db
+
+
+
+java -jar "H:\SJDwork\MF_SJD\suncertify\dist\suncertify.jar"
+
+
+java -jar runme.jar
+
+

@@ -6,9 +6,8 @@ package DBEngineTest;
 
 import java.io.*;
 import java.util.*;
-
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *  This class does all the work of the database, instantiating the files,
@@ -17,6 +16,9 @@ import java.util.*;
  * @author matthewfarley
  */
 public class DBEngineTest {
+    private static short DELETE_FLAG = (short)0x8000;
+    private static short VALID_FLAG = (short)00;
+    
     private String path;
     private StringBuilder blankRecord = 
             new StringBuilder(Contractor.RECORD_LENGTH);
@@ -24,7 +26,7 @@ public class DBEngineTest {
     private RandomAccessFile dbFile;
     private int dbLength;
     //Map used to store a record of the starting point of each record.
-    private Map<String, Long> recordNumbers;
+    private Map<List<String>, Long> recordLocation = new HashMap<List<String>, Long>();
     
     
     /** Creates new DBEngine 
@@ -43,7 +45,66 @@ public class DBEngineTest {
         }//figure out how to handle exceptions later.  Throw Database Exception?
     }
     
-    //public xxx getRecords(){}
+    public void delete(long location){
+        try{
+            synchronized(dbFile){
+                dbFile.seek(location);
+                //dbFile.writeShort(DELETE_FLAG);
+                dbFile.writeShort(VALID_FLAG);
+            }
+        }catch(IOException ioe){
+             System.out.println("Exception while deleting records\n" +
+                    " to database file\n" + ioe);
+        }
+    } 
+    
+    
+    //Find records 1 String
+    public List<Contractor> search(SearchMode mode, String query){
+        List<Contractor> results = new ArrayList<Contractor>();
+        Pattern p = Pattern.compile(query);
+        Matcher m = null; //Primary matcher used when there is only 1 search term
+        Matcher m2 = null; //Used only when searching on both Name and Location
+        
+        for(Contractor c : getAllRecords()){
+   
+            if(mode.equals(SearchMode.NAME)){
+                m = p.matcher(c.getName());
+            }
+            else if(mode.equals(SearchMode.LOCATION)){
+                m = p.matcher(c.getCity());
+            }
+
+                if(m.find()){
+                    results.add(c);
+                }  
+        }
+        return results;
+    }
+    
+    
+    
+    //Overloaded find method!!
+     public List<Contractor> search(String nameQuery, 
+             String locationQuery ){
+        List<Contractor> results = new ArrayList<Contractor>();
+        Pattern pName = Pattern.compile(nameQuery);
+        Pattern pLocation = Pattern.compile(locationQuery);
+  
+        for(Contractor c : getAllRecords()){
+               Matcher mName = pName.matcher(c.getName());
+                Matcher mLocation = pLocation.matcher(c.getCity());
+      
+
+                if(mName.find() && mLocation.find()){
+                    results.add(c);
+                }    
+        }
+        return results;
+    }
+            
+            
+
     //public xxx buildRecordNumbers();
     
     //trying to get a single record out of the DB.
@@ -89,17 +150,19 @@ public class DBEngineTest {
         List<String> fields = new ArrayList<String>();
         
         String temp = null;
+        int tempInt = 0;
         
         int loopOffset = Contractor.FLAG_LENGTH; 
         
         for(int i = 0; i < fieldLength.length; i ++ ){
             //skips the 2 byte flag in the byte[]
+            tempInt = ((int)record[0] << 8) + (record[1] & 0xff);
             temp = new String(record, loopOffset, fieldLength[i]);
             temp.trim();
             fields.add(temp);
             loopOffset += fieldLength[i];
         }
-        return new Contractor(fields);
+        return new Contractor(tempInt,fields);
     }
     
         public List<Contractor> getAllRecords(){
@@ -119,10 +182,25 @@ public class DBEngineTest {
         for(int i = Contractor.OFFSET_LENGTH; i < dbLength; i += 
               Contractor.RECORD_LENGTH){
             temp = convertRecord(readRecord(i));
+            recordLocation.put(Collections.unmodifiableList(
+                    Arrays.asList(temp.getName(), temp.getCity())),new Long(i));
+                    
             contractors.add(temp);
         }
         
         return contractors;
     }
+        
+        public void getLocation(List<String> key){
+            
+            if(recordLocation.containsKey(key)){
+                System.out.println("found " + recordLocation.get(key));
+            }
+            else{
+                System.out.println("not found");
+            }
+        }
 
 }
+
+

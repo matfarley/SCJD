@@ -1,14 +1,10 @@
--Write code for exception Handling - What do I want to do with exceptions?
-Log?
 
--Find out how to close the window and call the savConfig() method - All windows.  Also how to close the entire application if only the dialog is exited.
+WEEK OF 30 SEP - 06 OCT
 
-- Implement DB interface with concrete database class
+"Windows Shared Folder"/"Web and Software Development"/Software/SCJD/suncertify/build
 
-- figure out how to read the file with RandomAccessFile. Use File.exists(path) before creating the file document.  If true continue, if not - re-enter the path!
 
-- Start writing database worker class and the methods that the database class will implement.
 
-- still designing locks
 
--The update and delete record functions are not required so implement last if at all.  If not implementing remove buttons from gui.
+- write up choices.txt
+

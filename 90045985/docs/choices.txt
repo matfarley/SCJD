@@ -1,0 +1,63 @@
+DESIGN CHOICES
+
+I chose to use MVC pattern to structure the project as a whole. This meant that the business and Interface of the 
+project were separated by a controller class at all times and either section could be replaced without adversely 
+Affecting other parts of the system.
+
+I chose to use Java's Remote Method Invocation for my server client connection because I have not used it before and it
+was a good opportunity to learn.  It also meant that I could treat the network database in a similar way to a local one in my
+code.
+
+I used a Contractor class as a value object to transport information on records.  This was because I felt it was tidy and
+looked like a better design than sending multiple variables and or arrays of data
+
+I chose to use a serialized "Config" object to save my properties file.  Saving an object with variables for port and URL etc 
+seemed tidier and easier to load again than using a txt file.
+
+In the display I struggled to figure out how to display the different search modes.  I chose to use check boxes to 
+change the search mode, and by checking both boxes you will search both fields.  I felt that check boxes were a 
+universal call to action.
+
+I chose to return table models from many of the methods in the ViewController class, this is because the main display
+was a table and once the table model was returned to the calling method in the MainWindow the table only needed to be reloaded.
+I felt this was the most efficient way of doing things.
+
+I chose to make a token implementation of the DB interface.  I only wrote methods that satisfied the compiler but were not 
+functional and not used in my program.  I chose to create my own methods to actually run the program because I felt the 
+interface methods were too restrictive and would actually make the program more complicated than it should be.
+
+I chose to use a method local inner class to build the strings for new records efficiently in the DBEngine class.  
+this fixes the problem I had of where to put the  offset and new Record variables and how to initialize them each time
+I wanted to add a new record
+ 
+I chose to overwrite records in the database marked as deleted if a user wanted to create a new record 
+with the same  primary key (Name + city). This is so it is only possible for one record with that primary key to ever 
+exist in the database, valid or not.
+
+I initially wanted to write two versions of the Database class, one for local and one for networking that included locking.
+I chose to write one because the local database would still operate perfectly even if it included record locking.  it was just 
+effectively useless code because only one client would ever be accessing the database.
+
+I chose to use the name and city of a contractor as composite primary key because they are unique and it would be more of a 
+Mess if i had to track which custom ID numbers belonged to which record without changing the database file.  I would
+have ended up using the name + city to manage a custom id number anyway.
+
+
+PERCEIVED PROBLEMS AND UNCERTAINTIES:
+I had many perceived problems because the project was so large and because I had never operated on a text file in a way
+that treated it like a database.  I was also not confident with the concept of networking or how to lock the records.
+
+Employing the locking code required a lot of thought, I was unsure which objects to lock and how to identify clients,
+whether it be by thread id or a custom ID.
+
+I was unsure how to represent the database.  Do I import it into a cache or read and write to a RandomAccessFile
+I had never used RandomAccessFile, so I had to learn.
+
+I had never packaged a project into Jar files so i had to learn
+
+I had never created javadoc's so I also had to learn.
+
+I didn't know anything about RMI, just that i wanted to try it, so I had to spend time learning it and then figuring out which
+way I wanted to register my object.  I also had to figure out the rmic compiler and rmiregistry.
+
+I was also skeptical about time - the project appeared quite involved and there was not much time given for its completion.
