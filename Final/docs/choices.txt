@@ -1,12 +1,17 @@
 DESIGN CHOICES
 
+I chose to use Java's Remote Method Invocation for my server client connection because I have not used it before and it
+was a good opportunity to learn.  It also meant that I could treat the network database in a similar way to a local one in my
+code.  This did however present a substantial problem when it came time to submit the project.  When the solution
+was run from the java .class files everything worked to plan, however when the package was compiled into a .jar
+file the java CLASSPATH setting was not set to look inside the actual .jar file for the stubs required to make
+RMI work.  As a solution the java CLASSPATH must be explicitly set to look inside the runme.jar file for the 
+classes it requires for RMI before the RMIRegistry is started.  
+This is done by calling set CLASSPATH= and setting it to the exact path of the .jar file
+
 I chose to use MVC pattern to structure the project as a whole. This meant that the business and Interface of the 
 project were separated by a controller class at all times and either section could be replaced without adversely 
 Affecting other parts of the system.
-
-I chose to use Java's Remote Method Invocation for my server client connection because I have not used it before and it
-was a good opportunity to learn.  It also meant that I could treat the network database in a similar way to a local one in my
-code.
 
 I used a Contractor class as a value object to transport information on records.  This was because I felt it was tidy and
 looked like a better design than sending multiple variables and or arrays of data
@@ -42,6 +47,10 @@ I chose to use the name and city of a contractor as composite primary key becaus
 Mess if i had to track which custom ID numbers belonged to which record without changing the database file.  I would
 have ended up using the name + city to manage a custom id number anyway.
 
+In the sever network access and local access windows some exceptions such as when the database file not being found are just
+returned by a change in the txt label.  More serious exceptions are actually caught and presented in a dialog box.
+In the main window serious exceptions are caught and presented in the same way.
+
 
 PERCEIVED PROBLEMS AND UNCERTAINTIES:
 I had many perceived problems because the project was so large and because I had never operated on a text file in a way
@@ -61,3 +70,11 @@ I didn't know anything about RMI, just that i wanted to try it, so I had to spen
 way I wanted to register my object.  I also had to figure out the rmic compiler and rmiregistry.
 
 I was also skeptical about time - the project appeared quite involved and there was not much time given for its completion.
+
+
+FUTURE
+The base methods exist in the DBEngine class to add functionality to simply modify a record.  This is currently
+not available.  The search could also be improved to take more fields.  This would be a much larger task as 
+extra functionality for searches was not considered.  
+As far as the gui goes I would remove all of the user input checking from the main window class and the 
+connection window classes and place it in the controller class. 

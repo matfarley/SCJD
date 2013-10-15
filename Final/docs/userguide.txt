@@ -51,8 +51,15 @@ Clear Booking:
 
 
 SERVER MODE --->
-To launch the server you must first run the RMIRegistry.  To do this open a seperate command prompt and navigate to
-the projects root folder.  type "rmiregistry" into the command line and press [return]
+To launch the server you must first run the RMIRegistry, but due to Java RMI idiosyncrocies yoU will first need 
+to set the CLASSPATH so that RMIregistry knows to look inside the .jar file for the application classes.  
+To do this open a seperate command prompt and navigate to the projects root folder. 
+Reset the CLASSPATH to the .jar file e.g. 
+
+set CLASSPATH=H:\SJDwork\90045985\runme.jar
+
+
+Then type "rmiregistry" into the command line and press [return]
 
 From a seperate command prompt, navigate to the root directory and execute the .jar file using the parameter "server":
 
